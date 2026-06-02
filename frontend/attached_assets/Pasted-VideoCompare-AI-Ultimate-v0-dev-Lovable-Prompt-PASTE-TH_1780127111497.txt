@@ -1,0 +1,1074 @@
+VideoCompare AI — Ultimate v0.dev / Lovable Prompt
+
+---
+
+PASTE THIS ENTIRE PROMPT INTO v0.dev OR LOVABLE
+
+---
+
+Build a complete two-page Next.js 14 App Router application called VideoCompare AI using TypeScript, Tailwind CSS, and shadcn/ui. The app is an AI-powered video comparison platform that uses RAG (Retrieval-Augmented Generation) with Gemini AI + ChromaDB.
+
+---
+
+TECH STACK
+
+- Next.js 14 App Router
+- TypeScript
+- Tailwind CSS
+- shadcn/ui components
+- Framer Motion (for all animations)
+- Lucide React (icons)
+- Plus Jakarta Sans (Google Font — import via next/font/google)
+- No authentication. No sign-in. No sign-up. Two pages only.
+
+---
+
+COLOR SYSTEM & DESIGN TOKENS
+
+```css
+/* Define these as CSS variables in globals.css */
+--orange-50: #fff7ed;
+--orange-100: #ffedd5;
+--orange-200: #fed7aa;
+--orange-300: #fdba74;
+--orange-400: #fb923c;
+--orange-500: #f97316;
+--orange-600: #ea580c;
+--orange-700: #c2410c;
+--orange-glow: rgba(249, 115, 22, 0.15);
+--orange-glow-strong: rgba(249, 115, 22, 0.3);
+--cream-bg: #fffbf5;
+--warm-white: #fefefe;
+--card-bg: rgba(255, 255, 255, 0.72);
+--card-border: rgba(249, 115, 22, 0.12);
+--card-border-hover: rgba(249, 115, 22, 0.3);
+--text-primary: #0f0f0f;
+--text-secondary: #4b4b4b;
+--text-muted: #9ca3af;
+--glass-bg: rgba(255, 255, 255, 0.65);
+--glass-border: rgba(255, 255, 255, 0.9);
+```
+
+Primary background: soft warm off-white (#fffbf5), never pure white.
+Accent: cosmic orange (#f97316) — used for CTAs, glows, borders, highlights.
+Typography: Plus Jakarta Sans for ALL text. Vary weights (300, 400, 500, 600, 700, 800).
+
+---
+
+GLOBAL STYLES
+
+```css
+body {
+  background-color: #fffbf5;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #0f0f0f;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism card base */
+.glass-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(249, 115, 22, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(249, 115, 22, 0.06), 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* Orange glow button */
+.btn-orange-glow {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  box-shadow: 0 0 24px rgba(249, 115, 22, 0.35), 0 4px 12px rgba(249, 115, 22, 0.2);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-orange-glow:hover {
+  box-shadow: 0 0 40px rgba(249, 115, 22, 0.5), 0 8px 20px rgba(249, 115, 22, 0.3);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Ambient background particles */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  opacity: 0.35;
+}
+```
+
+---
+
+PAGE 1 — LANDING PAGE (/)
+
+FILE: `app/page.tsx`
+
+Complete landing page. No authentication. No mock data. Pure marketing page with premium visual sections.
+
+---
+
+SECTION 1 — FLOATING NAVBAR
+
+```tsx
+// Floating glassmorphism pill navbar
+// Behavior: transparent at top, gets glass bg on scroll (use useScrollY from framer-motion)
+// Layout: sticky top-4, mx-auto, max-w-5xl, px-6, py-3
+// Background: rgba(255,255,255,0.8) backdrop-blur-xl border border-orange-100 rounded-full
+// Shadow: 0 4px 24px rgba(249,115,22,0.08)
+// Animate: subtle drop shadow strengthens on scroll
+```
+
+Left: Logo — orange circle with "VC" initials + "VideoCompare AI" text in font-weight 700
+
+Center links (hidden on mobile):
+- Features
+- How It Works  
+- Technology
+- About
+
+Link style: text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors
+
+Right:
+- GitHub icon button (Lucide `Github`) — ghost style
+- "Get Started →" button — orange gradient pill, font-weight 600, py-2 px-5, rounded-full, glow effect, onClick routes to /dashboard
+
+On mobile: hamburger menu, links collapse into dropdown.
+
+Navbar entrance: fade down from -20px on page load with 0.3s ease.
+
+---
+
+SECTION 2 — HERO SECTION
+
+```tsx
+// Full viewport height section (min-h-screen)
+// pt-32 pb-20
+// Two column layout: left 55%, right 45%
+// Background: cream white with ambient orange orbs
+```
+
+AMBIENT BACKGROUND (absolute positioned, behind content):
+- Orb 1: 600px circle, background: radial-gradient(circle, rgba(249,115,22,0.12) 0%, transparent 70%), top-10 -right-40
+- Orb 2: 400px circle, background: radial-gradient(circle, rgba(251,146,60,0.08) 0%, transparent 70%), top-1/2 left-0
+- Orb 3: 300px circle, background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%), bottom-20 right-1/4
+- These orbs have a slow float animation (6–10s loop, translateY ±20px)
+
+LEFT COLUMN — TEXT CONTENT:
+
+Badge pill at top (animated fade-in, delay 0.1s):
+```
+[✦ AI-Powered RAG System]
+```
+Style: bg-orange-50 border border-orange-200 text-orange-600 text-xs font-semibold px-4 py-1.5 rounded-full inline-flex items-center gap-2
+
+Main heading (animated fade-up, delay 0.2s):
+```
+Compare Videos.
+Understand Better.
+```
+Style: text-6xl font-extrabold leading-[1.08] tracking-tight text-gray-900. "Better." has text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600
+
+Subheading (animated fade-up, delay 0.35s):
+```
+Paste two video URLs. Our AI extracts transcripts, creates 
+vector embeddings, and delivers citation-backed comparisons 
+powered by Gemini AI and ChromaDB.
+```
+Style: text-lg text-gray-500 font-normal leading-relaxed max-w-xl mt-5
+
+CTA Buttons row (animated fade-up, delay 0.5s):
+- Button 1: "Get Started →" — orange gradient glow button, rounded-full px-8 py-3.5 text-white font-semibold, routes to /dashboard
+- Button 2: "Watch Demo" — ghost button, border border-gray-200 text-gray-700 rounded-full px-8 py-3.5 font-medium hover:border-orange-200
+
+Technology badge pills (animated fade-up, delay 0.65s, displayed in a flex-wrap row with gap-2):
+- [Gemini AI] [ChromaDB] [RAG Pipeline] [Whisper] [yt-dlp] [FastAPI]
+
+Each pill: bg-white border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full shadow-sm hover:border-orange-200 transition
+
+RIGHT COLUMN — HERO VISUAL ILLUSTRATION:
+
+This is a custom floating UI mockup illustration. Build it entirely with divs, not an image.
+
+```tsx
+// Outer wrapper: relative w-full h-[540px]
+// All child cards are absolutely positioned with different z-indexes
+// Overall effect: layered, floating, alive
+```
+
+Card 1 — Video A Card (top-left, z-10, slight -rotate-2):
+- Glass card style: bg-white/80 backdrop-blur-xl border border-orange-100 rounded-2xl p-4 shadow-xl w-52
+- Orange thumbnail placeholder (bg-gradient-to-br from-orange-100 to-orange-200 h-28 rounded-lg)
+- Creator name placeholder (gray bar)
+- View count with eye icon
+- Animate: float up/down 4s loop
+
+Card 2 — Video B Card (top-right, z-10, slight rotate-2):
+- Same structure as Card 1 but mirrored aesthetics
+
+Center connector beam (absolute center, z-5):
+- A horizontal animated line between the two cards
+- Use CSS animation: a glowing orange pulse traveling left to right along the line
+- Line: 2px height, background: linear-gradient(90deg, transparent, #f97316, transparent)
+- The orange dot/cursor moves along the line with keyframe animation
+
+AI Reasoning Card (center-bottom, z-20):
+- Larger glass card: "AI Comparison" header with orange sparkle icon
+- 3 short gray placeholder lines (loading skeleton bars)
+- Orange badge: "RAG Retrieved"
+- Animate: pulsing glow border (box-shadow animation)
+
+Citations mini-card (bottom-left, z-15):
+- Small card: "2 Citations Found"
+- Two mini rows: [Video A] chunk preview text, [Video B] chunk preview text
+- Tiny orange dot indicators
+
+Embeddings visual (floating top-center, z-8):
+- Small card showing "Embeddings" with 6 tiny colored squares in a grid (represent vector dimensions)
+- Animate: individual squares randomly pulse opacity
+
+ChromaDB indicator (top-right floating, z-8):
+- Pill badge: "ChromaDB ✓ 48 chunks indexed"
+- bg-orange-50 border-orange-200
+
+All cards have entrance animations (fade-in + translateY from 30px, staggered delays 0.3s to 1.2s).
+All cards have continuous subtle float animation (individual timings so they don't sync).
+
+---
+
+SECTION 3 — WHY USE SECTION
+
+```tsx
+// pt-24 pb-20 bg-white/40
+// Section label: "WHY VIDEOCOMPARE AI" — text-xs font-bold tracking-widest text-orange-500 uppercase
+// Section heading: "Built for Deep Video Intelligence" — text-4xl font-bold text-gray-900 mt-3
+// Grid: 2x2 on desktop, 1-col on mobile, gap-6, mt-16
+```
+
+Feature Card Component:
+```
+Glass card style
+Padding: p-8
+Icon: 48px circle bg-orange-50 with centered Lucide icon (orange-500)
+Title: text-xl font-bold text-gray-900 mt-5
+Description: text-gray-500 mt-2 leading-relaxed
+Hover: translateY(-4px), border-orange-200, shadow-orange-glow
+Transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)
+```
+
+Four cards:
+
+1. Transcript Intelligence — Lucide `FileText` icon
+   Description: "Extracts full captions via YouTube API with Whisper AI fallback for any video, ensuring complete transcript coverage."
+
+2. Engagement Analytics — Lucide `BarChart3` icon
+   Description: "Real-time metadata extraction — views, likes, comments, engagement rate — pulled directly via yt-dlp."
+
+3. RAG-Powered Comparison — Lucide `Layers` icon
+   Description: "Transcripts are chunked, embedded with Gemini models, and stored in ChromaDB for semantic vector retrieval."
+
+4. Citation-Backed Answers — Lucide `Quote` icon
+   Description: "Every AI response includes clickable source citations with exact transcript chunk previews from both videos."
+
+Cards animate in from below with stagger (0.1s each) when section enters viewport (use Framer Motion `whileInView`).
+
+---
+
+SECTION 4 — HOW IT WORKS SECTION
+
+```tsx
+// pt-24 pb-20
+// Section label + heading same pattern as above
+// Heading: "The AI Pipeline"
+// Subheading: "Seven intelligent steps from URL to insight"
+```
+
+Horizontal Timeline (desktop) / Vertical (mobile):
+
+Build a connected step flow with animated connector lines.
+
+Steps array:
+```js
+[
+  { step: "01", icon: Link, title: "Paste URLs", desc: "Two video URLs submitted" },
+  { step: "02", icon: Database, title: "Extract Metadata", desc: "yt-dlp pulls stats" },
+  { step: "03", icon: FileText, title: "Read Transcript", desc: "Captions + Whisper fallback" },
+  { step: "04", icon: Scissors, title: "Chunk & Embed", desc: "Gemini embeddings created" },
+  { step: "05", icon: Server, title: "Index to ChromaDB", desc: "Vectors stored" },
+  { step: "06", icon: Search, title: "Semantic Retrieve", desc: "RAG context fetching" },
+  { step: "07", icon: Sparkles, title: "AI Comparison", desc: "Gemini streams answer" },
+]
+```
+
+Each step node:
+- Circle badge with step number (bg-orange-500 text-white font-bold w-10 h-10 rounded-full)
+- Lucide icon below circle
+- Title: font-semibold text-gray-900
+- Desc: text-sm text-gray-500
+
+Connector line between steps:
+- Dashed horizontal line (border-dashed border-orange-200)
+- Animated: orange dot travels along the line repeatedly (CSS keyframe, 3s loop)
+
+On mobile: stack vertically, connector becomes vertical dashed line.
+
+Animate entire section with `whileInView` stagger (0.08s per step).
+
+---
+
+SECTION 5 — LIVE PIPELINE VISUAL SECTION
+
+```tsx
+// pt-24 pb-20 bg-gradient-to-b from-orange-50/30 to-transparent
+// Heading: "Real AI Engineering. Live."
+// Subtext: "Not a chatbot wrapper — a production-grade vector retrieval system"
+```
+
+Build a large visual representation of the pipeline architecture (pure CSS/HTML, no image):
+
+Central large glass card (max-w-4xl mx-auto, p-8):
+
+Three rows inside:
+
+Row 1 — Input Layer:
+```
+[Video URL A] ──→ [Metadata Extract] ──→ [Transcript]
+[Video URL B] ──→ [Metadata Extract] ──→ [Transcript]
+```
+Each node: rounded-lg bg-orange-50 border border-orange-100 px-4 py-2 text-sm font-medium text-orange-700
+Arrows: → using CSS (::after with border-right + border-top rotated)
+
+Row 2 — Processing Layer (center, highlighted):
+```
+[Chunking] ──→ [Gemini Embeddings] ──→ [ChromaDB Storage]
+```
+These nodes are larger (p-3 px-5), orange gradient background, white text, glow shadow
+An animated pulsing border runs around the "Gemini Embeddings" node specifically
+
+Row 3 — Retrieval & Generation Layer:
+```
+[User Question] ──→ [Vector Search] ──→ [RAG Context] ──→ [Gemini LLM] ──→ [Streamed Answer + Citations]
+```
+The final "Streamed Answer" node has an animated typing cursor blinking inside it
+
+Animated flow:
+- CSS keyframe animation that makes orange dots flow from left to right through each row
+- Creates the feeling of data moving through the pipeline
+- Different timing per row (2.5s, 3s, 3.5s)
+
+Below the architecture card: 3 stat pills
+- [48 chunks per session avg] [<2s retrieval time] [Gemini 1.5 Flash]
+Each: bg-white border border-orange-100 rounded-full px-5 py-2 text-sm font-medium text-gray-700
+
+---
+
+SECTION 6 — ABOUT / TECH STACK SECTION
+
+```tsx
+// pt-24 pb-20
+// Two column: left 50%, right 50%
+```
+
+Left column — Text:
+Heading: "Built on Modern AI Infrastructure" — text-3xl font-bold
+Paragraph: Explanation of the backend stack, purpose, and engineering decisions. ~3 short paragraphs. Keep it natural, not marketing fluff.
+
+Right column — Tech Stack Grid:
+```tsx
+// 2x3 grid of tech cards
+// Each: glass card p-5 rounded-2xl hover:border-orange-200
+```
+
+Tech cards:
+1. FastAPI — "High-performance async Python backend"
+2. Gemini AI — "LLM + Embeddings from Google"
+3. ChromaDB — "Local vector database for chunk storage"
+4. LangChain — "RAG orchestration pipeline"
+5. yt-dlp + Whisper — "Metadata + transcript extraction"
+6. Next.js 14 — "App Router, TypeScript, Tailwind"
+
+Each card:
+- Icon: relevant Lucide icon (Zap for FastAPI, Brain for Gemini, Database for ChromaDB, etc.)
+- Title: font-semibold text-gray-900
+- Desc: text-sm text-gray-500
+
+---
+
+SECTION 7 — FOOTER
+
+```tsx
+// Dark premium footer
+// Background: #0f0a05 (very dark warm black)
+// Subtle orange grid overlay (CSS background-image: linear-gradient subtle grid lines, opacity 0.04)
+// pt-20 pb-12
+```
+
+Top row (flex justify-between):
+
+Left:
+- Logo: "VideoCompare AI" in white font-bold text-2xl
+- Tagline below: "AI-powered video comparison using RAG + Gemini" in gray-400 text-sm
+
+Right:
+- Navigation links in gray-400: Features · How It Works · Technology · GitHub
+- Links hover: text-orange-400 transition
+
+Bottom row (border-t border-white/5 pt-8 mt-12):
+
+Left: "Built for the AI engineering demo. FastAPI + Gemini + ChromaDB." — text-xs text-gray-600
+
+Center: Tech stack pills row:
+[FastAPI] [Gemini] [ChromaDB] [Whisper] [yt-dlp]
+Each: bg-white/5 border border-white/10 text-gray-400 text-xs rounded-full px-3 py-1
+
+Right: "© 2025 VideoCompare AI" — text-xs text-gray-600
+
+Footer entrance: fade-in as user scrolls to it.
+
+---
+
+PAGE 2 — DASHBOARD (/dashboard)
+
+FILE: `app/dashboard/page.tsx`
+
+This is the AI workspace. Clean, intelligent, premium.
+Absolutely no mock data. Every piece of data comes from real API calls.
+
+---
+
+STATE MANAGEMENT
+
+```tsx
+// Define these state variables at the top of the Dashboard component:
+
+type IngestStatus = 'idle' | 'loading' | 'success' | 'error';
+type PipelineStep = 'extracting_metadata' | 'reading_transcript' | 'creating_chunks' | 'generating_embeddings' | 'indexing_chromadb';
+
+interface VideoMetadata {
+  video_id: string;
+  url: string;
+  platform: string;
+  creator: string;
+  follower_count: number;
+  views: number;
+  likes: number;
+  comments: number;
+  hashtags: string[];
+  upload_date: string;
+  duration_seconds: number;
+  engagement_rate: number;
+  transcript_available: boolean;
+}
+
+interface IngestResponse {
+  session_id: string;
+  video_a: VideoMetadata;
+  video_b: VideoMetadata;
+  chunks_indexed: number;
+  warnings: string[];
+}
+
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  citations?: Citation[];
+  isStreaming?: boolean;
+}
+
+interface Citation {
+  video_id: string;
+  chunk_id: string;
+  text_preview: string;
+  source_url: string;
+}
+
+// State:
+const [videoAUrl, setVideoAUrl] = useState('');
+const [videoBUrl, setVideoBUrl] = useState('');
+const [ingestStatus, setIngestStatus] = useState<IngestStatus>('idle');
+const [currentPipelineStep, setCurrentPipelineStep] = useState<PipelineStep | null>(null);
+const [ingestData, setIngestData] = useState<IngestResponse | null>(null);
+const [messages, setMessages] = useState<ChatMessage[]>([]);
+const [inputMessage, setInputMessage] = useState('');
+const [isChatLoading, setIsChatLoading] = useState(false);
+const [error, setError] = useState<string | null>(null);
+```
+
+---
+
+API ABSTRACTION LAYER
+
+```typescript
+// FILE: lib/api.ts
+const BASE_URL = 'http://127.0.0.1:8000';
+
+export async function ingestVideos(videoAUrl: string, videoBUrl: string) {
+  const response = await fetch(`${BASE_URL}/api/ingest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ video_a_url: videoAUrl, video_b_url: videoBUrl }),
+  });
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.detail || `HTTP ${response.status}`);
+  }
+  return response.json() as Promise<IngestResponse>;
+}
+
+export async function* streamChat(sessionId: string, message: string): AsyncGenerator<{type: string, token?: string, citations?: Citation[], message?: string}> {
+  const response = await fetch(`${BASE_URL}/api/chat/stream`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_id: sessionId, message }),
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  
+  const reader = response.body!.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+    for (const line of lines) {
+      if (line.startsWith('data: ')) {
+        try {
+          const data = JSON.parse(line.slice(6));
+          yield data;
+        } catch {}
+      }
+    }
+  }
+}
+```
+
+---
+
+DASHBOARD LAYOUT
+
+```tsx
+// Dashboard is a single-page layout (no sidebar)
+// bg-[#fffbf5] min-h-screen
+// Ambient orange orbs in corners (same as landing page)
+// Thin top navbar: "VideoCompare AI" logo left, "← Back" link right
+// Main content: max-w-6xl mx-auto px-6 pt-12 pb-24
+```
+
+Top Minimal Header:
+- "VideoCompare AI" logo left (orange gradient text)
+- Back to home link right (text-sm text-gray-400 hover:text-gray-700)
+- No full navbar needed — keep it minimal
+
+---
+
+DASHBOARD SECTION 1 — URL INPUT
+
+```tsx
+// Glass card, p-8 rounded-3xl
+// Heading: "New Comparison" — text-3xl font-bold text-gray-900
+// Subheading: "Paste two video URLs to analyze and compare using AI" — text-gray-500
+```
+
+URL Input Fields:
+
+```tsx
+// Each input wrapper: relative group
+// Input: full-width, h-14, pl-12, rounded-2xl
+// Background: bg-white
+// Border: border-1.5 border-gray-200 focus:border-orange-400
+// Transition: all 0.2s ease
+// Shadow on focus: 0 0 0 4px rgba(249,115,22,0.08)
+// Left icon: Lucide Youtube (orange-400) positioned absolute left-4 top-50% transform -translate-y-50%
+// Placeholder: "Paste YouTube URL for Video A..."
+// On focus: label above input animates up (floating label behavior)
+```
+
+Input A has label "Video A" floating above.
+Input B has label "Video B" floating above.
+
+Analyze Button:
+```tsx
+// Full width, h-14, rounded-2xl, mt-4
+// Background: linear-gradient(135deg, #f97316, #ea580c)
+// Text: "Analyze Videos →" — text-white font-semibold text-base
+// Box shadow: 0 0 24px rgba(249,115,22,0.3), 0 4px 12px rgba(249,115,22,0.15)
+// Hover: shadow intensifies, translateY(-2px)
+// Active: scale(0.99)
+// Disabled: opacity-50 cursor-not-allowed
+// Loading: show spinner + "Analyzing..." text
+// Validation: if either URL is empty, shake the empty input (CSS keyframe shake)
+```
+
+On click:
+1. Validate both URLs are non-empty (show inline error if empty: "Please enter a video URL")
+2. Call ingestVideos()
+3. Show pipeline loading states
+4. On success: populate ingest data and show comparison section
+
+---
+
+DASHBOARD SECTION 2 — PIPELINE LOADING STATES
+
+```tsx
+// Shown ONLY during ingest loading
+// Animated transition in/out (Framer Motion AnimatePresence)
+// Glass card p-6 rounded-3xl mt-8
+```
+
+Pipeline Steps Component:
+
+```tsx
+const PIPELINE_STEPS = [
+  { id: 'extracting_metadata', label: 'Extracting Metadata', icon: Database, desc: 'yt-dlp fetching video stats' },
+  { id: 'reading_transcript', label: 'Reading Transcript', icon: FileText, desc: 'Captions + Whisper fallback' },
+  { id: 'creating_chunks', label: 'Creating Chunks', icon: Scissors, desc: 'Splitting transcript into segments' },
+  { id: 'generating_embeddings', label: 'Generating Embeddings', icon: Brain, desc: 'Gemini creating vector representations' },
+  { id: 'indexing_chromadb', label: 'Indexing in ChromaDB', icon: Server, desc: 'Storing vectors for retrieval' },
+]
+```
+
+Simulate step progression (since backend is a single call, auto-advance steps every ~3.5s during loading):
+
+Each step row:
+- Left: icon circle (w-10 h-10) — pending: bg-gray-100 text-gray-400 | active: bg-orange-100 text-orange-500 with spin/pulse animation | done: bg-green-50 text-green-500 with checkmark
+- Center: step label (font-semibold) + description (text-sm text-gray-500)
+- Right: pending "..." | active: animated pulsing dot + "In progress..." | done: "Done" with checkmark
+
+Active step has: border-l-2 border-orange-400 pl-4 bg-orange-50/30 rounded-xl
+
+Overall progress bar at top:
+```
+bg-gray-100 rounded-full h-1.5
+Fill: bg-gradient-to-r from-orange-400 to-orange-600 h-full rounded-full
+Animated: width transitions from 0% to 100% over the loading duration
+```
+
+Heading: "AI Pipeline Running..." with pulsing orange dot
+
+---
+
+DASHBOARD SECTION 3 — COMPARISON OVERVIEW
+
+```tsx
+// Shown ONLY after successful ingest
+// AnimatePresence: fade-in with slight slide-up
+// mt-8
+```
+
+Section header:
+"Comparison Overview" — text-2xl font-bold text-gray-900
+Subtext: `{ingestData.chunks_indexed} transcript chunks indexed` — text-sm text-orange-500 font-medium
+
+Two-column grid (gap-6):
+
+VideoCard Component (render for both video_a and video_b):
+```tsx
+// Glass card p-6 rounded-3xl
+// Top row: platform badge + URL truncated
+// Platform badge: bg-orange-50 text-orange-600 text-xs font-semibold px-3 py-1 rounded-full border border-orange-100
+
+// Thumbnail placeholder (no actual thumbnail — use gradient placeholder):
+// bg-gradient-to-br from-orange-100 via-orange-50 to-amber-50
+// h-36 rounded-2xl flex items-center justify-center
+// Large play button icon (Lucide PlayCircle, 48px, text-orange-300)
+
+// Creator name: text-xl font-bold text-gray-900 mt-4
+// Show actual: ingestData.video_a.creator
+
+// Metadata grid (2x3):
+// Each cell: label (text-xs text-gray-400 uppercase tracking-wide) + value (text-sm font-semibold text-gray-800)
+// Cells: Views | Likes | Comments | Duration | Upload Date | Engagement Rate
+
+// Format functions:
+// formatNumber(n): 1,234,567 → "1.2M" | 234,567 → "234.5K" | etc.
+// formatDuration(seconds): 3661 → "1h 1m" | 183 → "3m 3s"
+// formatDate(dateStr): "20231015" → "Oct 15, 2023"
+// formatEngagement(rate): rate.toFixed(2) + "%" 
+
+// Transcript status badge:
+// If transcript_available: bg-green-50 border-green-100 text-green-600 "✓ Transcript Available"
+// If not: bg-red-50 border-red-100 text-red-500 "✗ No Transcript"
+// Badge: text-xs font-medium px-3 py-1 rounded-full border
+```
+
+VS Divider between cards:
+```tsx
+// Vertical: absolute center between two cards
+// Circle with "VS" text
+// bg-white border-2 border-orange-200 text-orange-500 font-bold text-sm w-10 h-10 rounded-full flex items-center justify-center
+// Box shadow: 0 0 20px rgba(249,115,22,0.2)
+// Animate: slow pulse (scale 1 → 1.05 → 1, 2s loop)
+```
+
+---
+
+DASHBOARD SECTION 4 — ENGAGEMENT WINNER PANEL
+
+```tsx
+// Shown only when ingestData is available
+// Horizontal banner card below the comparison grid
+// mt-4 p-5 rounded-2xl
+// Background: linear-gradient(135deg, rgba(249,115,22,0.06), rgba(251,146,60,0.04))
+// Border: border border-orange-100
+```
+
+Logic:
+```tsx
+const winner = ingestData.video_a.engagement_rate >= ingestData.video_b.engagement_rate 
+  ? { label: 'Video A', data: ingestData.video_a, isA: true }
+  : { label: 'Video B', data: ingestData.video_b, isA: false };
+```
+
+Display:
+- Left: Trophy icon (Lucide `Trophy`, text-orange-400 w-8 h-8)
+- Center: "Better Engagement Winner" — text-xs text-gray-400 uppercase tracking-wide | Winner creator name — text-xl font-bold text-gray-900 | Engagement rate — text-orange-500 font-semibold
+- Right: Badge "↑ Higher Engagement" — bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full, glow shadow
+
+---
+
+DASHBOARD SECTION 5 — WARNINGS PANEL
+
+```tsx
+// Show ONLY if ingestData.warnings.length > 0
+// mt-4
+```
+
+Collapsible panel:
+- Header: amber warning icon + "Warnings ({count})" — clickable to toggle
+- Body: list of warning strings, each with a small amber dot
+- Collapsed by default
+- bg-amber-50 border border-amber-100 rounded-2xl p-4 text-amber-700 text-sm
+
+---
+
+DASHBOARD SECTION 6 — AI CHAT SECTION
+
+```tsx
+// This is the main workspace section
+// mt-10
+// Glass card p-0 rounded-3xl overflow-hidden
+// Two-column layout on large screens: chat area (flex-1) + citations sidebar (w-72)
+```
+
+Chat Header:
+```tsx
+// Inside card, top bar
+// bg-white/80 border-b border-orange-100 px-6 py-4
+// Left: Sparkles icon (orange-400) + "AI Comparison" text font-bold
+// Right: Session ID badge (small, monospace text-xs text-gray-400): "Session: {sessionId.slice(0,8)}..."
+```
+
+Suggested Questions Pills:
+```tsx
+// Shown at top of chat ONLY when messages.length === 0
+// Heading: "Try asking..." — text-sm text-gray-400 mb-3
+
+const SUGGESTED_QUESTIONS = [
+  "Which video has a stronger message?",
+  "Compare the audience targeting strategy of both videos",
+  "Which creator used a better hook in their opening?",
+  "Summarize the key topics covered in both videos",
+  "Which video drives more engagement and why?",
+  "Compare the storytelling techniques used",
+]
+
+// Render as wrapped flex pills
+// Each: bg-white border border-gray-200 text-gray-600 text-sm px-4 py-2 rounded-full hover:border-orange-300 hover:text-orange-600 hover:bg-orange-50 transition cursor-pointer
+// onClick: setInputMessage(question) and immediately submit
+```
+
+Messages Area:
+```tsx
+// Scrollable area, flex-1, overflow-y-auto
+// Padding: px-6 py-4
+// Max height: ~420px with scroll
+// Scroll to bottom on new message (useRef + scrollIntoView)
+```
+
+Message bubble component:
+```tsx
+// User message:
+// Align right, bg-orange-500 text-white, rounded-3xl rounded-br-sm px-5 py-3
+// max-w-[75%] font-medium text-sm
+
+// Assistant message:
+// Align left, bg-white border border-gray-100 shadow-sm, rounded-3xl rounded-bl-sm px-5 py-4
+// max-w-[85%]
+// If isStreaming: show blinking cursor at end of text (CSS ::after with animate-blink)
+// Streaming render: content streams in token by token, update state with each token
+// After streaming done: show citations section below the message
+```
+
+Streaming implementation:
+```tsx
+async function handleSendMessage() {
+  if (!inputMessage.trim() || !ingestData || isChatLoading) return;
+  
+  const userMsg: ChatMessage = { role: 'user', content: inputMessage };
+  const assistantMsg: ChatMessage = { role: 'assistant', content: '', isStreaming: true };
+  
+  setMessages(prev => [...prev, userMsg, assistantMsg]);
+  setInputMessage('');
+  setIsChatLoading(true);
+  
+  let fullContent = '';
+  let citations: Citation[] = [];
+  
+  try {
+    for await (const event of streamChat(ingestData.session_id, inputMessage)) {
+      if (event.type === 'token' && event.token) {
+        fullContent += event.token;
+        setMessages(prev => prev.map((m, i) => 
+          i === prev.length - 1 ? { ...m, content: fullContent } : m
+        ));
+      } else if (event.type === 'citations' && event.citations) {
+        citations = event.citations;
+      } else if (event.type === 'error') {
+        throw new Error(event.message);
+      }
+    }
+    setMessages(prev => prev.map((m, i) =>
+      i === prev.length - 1 ? { ...m, isStreaming: false, citations } : m
+    ));
+  } catch (err) {
+    setMessages(prev => prev.map((m, i) =>
+      i === prev.length - 1 ? { ...m, content: 'Error getting response. Please try again.', isStreaming: false } : m
+    ));
+  } finally {
+    setIsChatLoading(false);
+  }
+}
+```
+
+Chat Input Bar:
+```tsx
+// Fixed to bottom of chat card
+// Border-t border-orange-100 bg-white/80 backdrop-blur-sm
+// px-4 py-3 flex items-center gap-3
+
+// Input: flex-1, h-11, rounded-xl, bg-gray-50 border border-gray-200
+// Focus: border-orange-300 ring-2 ring-orange-50
+// Placeholder: "Ask about both videos..."
+// Press Enter to submit
+
+// Send button: w-11 h-11 rounded-xl bg-orange-500 hover:bg-orange-600
+// Lucide Send icon, text-white
+// Disabled when empty or loading
+// Loading: replace Send icon with spinning Loader2 icon
+```
+
+---
+
+DASHBOARD SECTION 7 — CITATIONS PANEL
+
+```tsx
+// Shown inside the chat card as right sidebar on desktop
+// On mobile: shown below the last assistant message
+// Width: w-72 border-l border-orange-100 bg-orange-50/30
+```
+
+Panel Header:
+"Citations" — text-sm font-bold text-gray-700 px-5 py-4 border-b border-orange-100
+
+Citation Card Component:
+```tsx
+// For each citation in the latest assistant message (or any selected message)
+// p-4 border-b border-orange-50 hover:bg-white/60 transition cursor-pointer
+
+// Top row: video badge + chunk id
+// Video badge: if video_id matches video_a.video_id: "Video A" else "Video B"
+// bg-orange-50 border border-orange-100 text-orange-600 text-xs font-bold px-2 py-0.5 rounded-md
+// Chunk id: text-xs text-gray-400 font-mono ml-auto
+
+// Text preview: text-xs text-gray-600 mt-2 leading-relaxed line-clamp-3
+// Show: citation.text_preview
+
+// Source link: 
+// text-xs text-orange-500 hover:text-orange-700 flex items-center gap-1 mt-2
+// Lucide ExternalLink icon (12px) + "View Source"
+// href: citation.source_url, target: _blank
+```
+
+If no citations yet:
+```tsx
+// Empty state
+// py-12 flex flex-col items-center text-center
+// Lucide BookOpen icon (text-gray-300, 32px)
+// "Citations appear after each AI response" — text-xs text-gray-400 mt-2
+```
+
+---
+
+DASHBOARD SECTION 8 — ERROR HANDLING
+
+Implement these error states (all styled as elegant toast notifications using shadcn/ui `toast`):
+
+```tsx
+// Error types to handle:
+// 1. BACKEND_OFFLINE: "Cannot connect to the backend server. Make sure it's running at localhost:8000."
+// 2. INVALID_URL: "One or more URLs appear invalid. Please check and try again."
+// 3. INGEST_FAILED: "Video processing failed. The video may be private or unavailable."
+// 4. TRANSCRIPT_UNAVAILABLE: "Transcript unavailable for one or more videos. Comparison may be limited."
+// 5. STREAM_ERROR: "AI response stream interrupted. Please try your question again."
+// 6. EMPTY_INPUT: "Please enter both video URLs before analyzing."
+// 7. NO_SESSION: "No active session. Please analyze videos first."
+```
+
+Each error toast:
+- bg-white border-l-4 border-red-400 rounded-xl shadow-lg p-4
+- Icon: Lucide AlertCircle (text-red-400)
+- Error message text
+- Auto-dismiss after 6s
+- Also show inline under the URL inputs for validation errors
+
+URL validation (before API call):
+```tsx
+function isValidUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol);
+  } catch {
+    return false;
+  }
+}
+```
+
+---
+
+ANIMATIONS & TRANSITIONS (FRAMER MOTION)
+
+```tsx
+// Page transition: wrap layout in AnimatePresence + motion.div
+// Enter: opacity 0 → 1, y: 20 → 0, duration 0.4s ease
+// Exit: opacity 1 → 0, duration 0.2s
+
+// Section reveal: use whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 30 }}
+// viewport={{ once: true, margin: "-50px" }}
+
+// Card hover: whileHover={{ y: -4, scale: 1.01 }} transition={{ type: "spring", stiffness: 300 }}
+
+// Button press: whileTap={{ scale: 0.97 }}
+
+// Stagger children: use variants with staggerChildren: 0.08
+
+// Floating animation for hero illustration cards:
+// animate={{ y: [0, -12, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+// Each card has different duration (3.5s, 4s, 4.5s, 5s) so they desync
+
+// Pipeline step activation: AnimatePresence for each step row
+// When step becomes active: width expand from 0% to 100% on the progress fill
+
+// Chat message entrance: initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+// Streaming text appears token by token (no extra animation needed, natural feel)
+
+// Streaming cursor:
+// A blinking |  character added to end of streaming message
+// CSS: @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} } animation: blink 0.8s infinite
+```
+
+---
+
+FOLDER STRUCTURE
+
+```
+app/
+  page.tsx                    ← Landing page
+  dashboard/
+    page.tsx                  ← Dashboard page
+  layout.tsx                  ← Root layout with fonts + metadata
+  globals.css                 ← CSS variables, global styles
+
+lib/
+  api.ts                      ← API abstraction (ingestVideos, streamChat)
+  utils.ts                    ← formatNumber, formatDuration, formatDate, formatEngagement
+
+components/
+  landing/
+    Navbar.tsx
+    HeroSection.tsx
+    HeroIllustration.tsx      ← The floating cards visual
+    WhySection.tsx
+    HowItWorksSection.tsx
+    PipelineVisualSection.tsx
+    AboutSection.tsx
+    Footer.tsx
+  dashboard/
+    UrlInputCard.tsx
+    PipelineLoader.tsx
+    VideoCard.tsx
+    EngagementWinner.tsx
+    WarningsPanel.tsx
+    ChatSection.tsx
+    CitationsPanel.tsx
+    SuggestedQuestions.tsx
+    MessageBubble.tsx
+  ui/                         ← shadcn/ui components
+```
+
+---
+
+RESPONSIVE BREAKPOINTS
+
+```
+Mobile (< 640px):
+- Hero: single column, illustration hidden, text centered
+- Dashboard: stacked layout, full-width cards, citations panel below messages
+- Pipeline: vertical layout
+- URL inputs: full width stacked
+
+Tablet (640–1024px):
+- Hero: illustration shows but smaller
+- Dashboard: 2-col metadata grid
+- Citations sidebar: bottom panel
+
+Desktop (> 1024px):
+- Full two-column hero
+- Side-by-side video cards
+- Chat + citations side by side
+```
+
+---
+
+CRITICAL IMPLEMENTATION RULES
+
+1. No mock data whatsoever. Every number, name, metric, and text displayed comes from the backend API response.
+
+2. No placeholder charts. Do not render charts unless real data exists. If data is unavailable, show the empty state.
+
+3. SSE streaming must work correctly. Implement the AsyncGenerator pattern exactly as specified. Handle partial JSON, connection drops, and stream errors gracefully.
+
+4. Show ingest section always. Even after successful ingest, keep the URL input visible so user can start a new comparison.
+
+5. Format all numbers. Never display raw large numbers — always use formatNumber() helper (1234567 → "1.2M").
+
+6. Session persistence. Store the sessionId in React state (not localStorage) and pass it with every chat request.
+
+7. Loading button state. The Analyze button must be disabled and show spinner during API call.
+
+8. Auto-scroll chat. Chat messages area must auto-scroll to bottom when new message arrives.
+
+9. Citations always attached to their message. When streaming ends and citations arrive, attach them to that specific assistant message, not globally.
+
+10. CORS note. Backend at localhost:8000 may need CORS allowed. Add a note in the UI if requests fail with CORS error.
+
+---
+
+FINAL AESTHETIC CHECKLIST
+
+- [ ] Font: Plus Jakarta Sans loaded via next/font/google — applied globally
+- [ ] Background: warm off-white #fffbf5 throughout
+- [ ] Orange (#f97316) used consistently as the only accent color
+- [ ] No blue, purple, or generic grays as primary colors
+- [ ] All cards use glassmorphism (backdrop-blur + semi-transparent white bg)
+- [ ] All borders use rgba(249,115,22,0.1) — never hard gray borders
+- [ ] Button hover states use box-shadow glow, not just color change
+- [ ] Headings use font-weight 700–800, body uses 400–500
+- [ ] No generic AI dashboard look — every section should feel intentionally designed
+- [ ] Ambient floating orbs on both pages for visual depth
+- [ ] Smooth route transition between / and /dashboard
+- [ ] Mobile-first responsive layout
+
+---
+
+Build this as a production-grade Next.js 14 application. Every component should be clean, typed, and maintainable. The visual quality must reflect a senior-level frontend engineer's output — not a template or a generator's default styling.

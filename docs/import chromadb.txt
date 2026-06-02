@@ -1,0 +1,7 @@
+import chromadb
+
+client = chromadb.CloudClient(
+  api_key='ck-8DCQh8jqhd82LXXbHGMmFew9cxkbJmYQxg2yQYFJgYMz',
+  tenant='8fa62d09-38f4-40de-9299-91e61ab1020c',
+  database='Vid_pair_rag'
+)

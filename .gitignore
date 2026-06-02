@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Env
+.env
+.env.local
+
+# Sessions / cache
+backend/data/cache/
+backend/data/sessions/
+backend/data/temp/
+backend/data/video_cache/
+
+# Node
+node_modules/
+
+# Frontend build
+dist/
+.next/
+.vite/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+.env
+backend/.env
+backend/data/cache/
+backend/data/temp/
+backend/data/sessions/
+backend/data/chroma/
+frontend/node_modules/
+backend/.venv/
